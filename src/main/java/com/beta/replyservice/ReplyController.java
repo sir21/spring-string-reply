@@ -2,6 +2,7 @@ package com.beta.replyservice;
 
 import com.beta.replyservice.exception.InvalidInput;
 import com.beta.replyservice.model.Error;
+import com.beta.replyservice.model.Reply;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,9 +25,9 @@ public class ReplyController {
 	@GetMapping("v2/reply/{rule}-{string}")
 	public ResponseEntity<Object> replyingV2(@PathVariable String rule, @PathVariable String string) throws Exception {
 		try {
-			return new ResponseEntity<>(new ReplyMessage(rule, string), HttpStatus.OK);
+			return new ResponseEntity<>(new Reply(new ReplyMessage(rule, string).getMessage()), HttpStatus.OK);
 		} catch (Exception ex) {
-			return new ResponseEntity<>(ex.getMessage(), ex.getMessage().equals("Invalid Input") ? HttpStatus.BAD_REQUEST : HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(new Error(ex.getMessage()), ex.getMessage().equals("Invalid input") ? HttpStatus.BAD_REQUEST : HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }
